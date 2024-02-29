@@ -39,7 +39,7 @@ class MainAppState extends State<MainApp> {
   void setCounter(String newCount) {
     counter.result = int.parse(newCount);
     setState(() {
-      res = counter.currentStep;
+      res = counter.currentResult;
     });
   }
 
