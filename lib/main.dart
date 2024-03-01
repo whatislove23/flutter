@@ -14,7 +14,7 @@ class MainApp extends StatefulWidget {
 class MainAppState extends State<MainApp> {
   int step = 1;
   int res = 0;
-  final counter = Counter();
+  final counter = Counter(step: 1, result: 23);
   void increment() {
     counter.increment();
     setState(() {
@@ -48,37 +48,79 @@ class MainAppState extends State<MainApp> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: const Text("Vladyslav's Tymchenko APP"),
+              title: const Text(
+                "Vladyslav's Tymchenko Counter",
+                style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontWeight: FontWeight.w500),
+              ),
               backgroundColor: const Color.fromARGB(255, 255, 166, 0),
               centerTitle: true,
             ),
-            body: Column(children: <Widget>[
-              Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Wrap(alignment: WrapAlignment.center, children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      TextButton(
-                          onPressed: decrement, child: const Text("Decrement")),
-                      Text(
-                        "Count $res",
-                        style: const TextStyle(fontSize: 24),
-                      ),
-                      TextButton(
-                          onPressed: increment, child: const Text("Increment")),
-                    ]),
-                    TextField(
-                      onSubmitted: setStep,
-                      keyboardType: TextInputType.number,
-                      decoration:
-                          InputDecoration(labelText: "Current step $step"),
-                    ),
-                    TextField(
-                      onSubmitted: setCounter,
-                      keyboardType: TextInputType.number,
-                      decoration:
-                          InputDecoration(labelText: "Current Count $res"),
-                    ),
-                  ]))
-            ])));
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                onPressed: decrement,
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const Text(
+                                  '-',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black),
+                                )),
+                            Text(
+                              '$res',
+                              style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
+                            ElevatedButton(
+                                onPressed: increment,
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const Text(
+                                  '+',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black),
+                                )),
+                          ],
+                        ),
+                        TextField(
+                          onSubmitted: setCounter,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              labelText: "Set count (Current: $res)"),
+                        ),
+                        TextField(
+                            onSubmitted: setStep,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: "Set step (Current: $step)",
+                              fillColor: Colors.white,
+                            ))
+                      ],
+                    ))
+              ],
+            )));
   }
 }
