@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'counter.dart';
+import 'calculator.dart';
 
 void main() {
   runApp(const MainApp()); // const MainApp()
@@ -12,36 +12,80 @@ class MainApp extends StatefulWidget {
 }
 
 class MainAppState extends State<MainApp> {
-  int step = 1;
-  int res = 0;
-  final counter = Counter(step: 1, result: 23);
-  void increment() {
-    counter.increment();
+  final calc = Calculator();
+  String firstVal = "";
+  String secondVal = "";
+  String operation = "";
+
+  void wipeFields() {
+    calc.curentOperation = "";
+    calc.firstNumber = "";
+    calc.secondNumber = "";
     setState(() {
-      res = counter.currentResult;
+      firstVal = "";
+      operation = "";
+      secondVal = "";
     });
   }
 
-  void decrement() {
-    counter.decrement();
-    setState(() {
-      res = counter.currentResult;
-    });
+  void helper(String value) {
+    int? isNumber = int.tryParse(value);
+    if ((firstVal.isNotEmpty && secondVal.isEmpty) &&
+        (value == "-" || value == "+" || value == "*" || value == "/")) {
+      calc.curentOperation = value;
+      setState(() {
+        operation = value;
+      });
+      return;
+    }
+    if (operation.isEmpty && isNumber != null) {
+      calc.firstNumber += value;
+      setState(() {
+        firstVal += value;
+      });
+      return;
+    }
+    if (operation.isNotEmpty && isNumber != null) {
+      calc.secondNumber += value;
+      setState(() {
+        secondVal += value;
+      });
+      return;
+    }
+    if (value == "AC") {
+      wipeFields();
+      return;
+    }
+    if (value == "=" && firstVal.isNotEmpty && secondVal.isNotEmpty) {
+      String temp = calc.calculate();
+      wipeFields();
+      calc.firstNumber = temp;
+      setState(() {
+        firstVal = temp;
+      });
+      return;
+    }
   }
 
-  void setStep(String newStep) {
-    counter.step = int.parse(newStep);
-    setState(() {
-      step = counter.currentStep;
-    });
-  }
-
-  void setCounter(String newCount) {
-    counter.result = int.parse(newCount);
-    setState(() {
-      res = counter.currentResult;
-    });
-  }
+//Why this way? - The instance member 'helper' can't be accessed in an initializer.
+  dynamic initializeButtons() => [
+        {"value": "0", "function": helper},
+        {"value": "1", "function": helper},
+        {"value": "2", "function": helper},
+        {"value": "+", "function": helper},
+        {"value": "3", "function": helper},
+        {"value": "4", "function": helper},
+        {"value": "5", "function": helper},
+        {"value": "-", "function": helper},
+        {"value": "6", "function": helper},
+        {"value": "7", "function": helper},
+        {"value": "8", "function": helper},
+        {"value": "*", "function": helper},
+        {"value": "9", "function": helper},
+        {"value": "/", "function": helper},
+        {"value": "=", "function": helper},
+        {"value": "AC", "function": helper},
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +93,7 @@ class MainAppState extends State<MainApp> {
         home: Scaffold(
             appBar: AppBar(
               title: const Text(
-                "Vladyslav's Tymchenko Counter",
+                "Vladyslav's Tymchenko Calculator",
                 style: TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255),
                     fontWeight: FontWeight.w500),
@@ -57,70 +101,64 @@ class MainAppState extends State<MainApp> {
               backgroundColor: const Color.fromARGB(255, 255, 166, 0),
               centerTitle: true,
             ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            body: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: const Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            firstVal,
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            operation,
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            secondVal,
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Expanded(
+                      child: GridView.count(
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
                           children: [
-                            ElevatedButton(
-                                onPressed: decrement,
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: const Text(
-                                  '-',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black),
-                                )),
-                            Text(
-                              '$res',
-                              style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black),
-                            ),
-                            ElevatedButton(
-                                onPressed: increment,
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: const Text(
-                                  '+',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black),
-                                )),
-                          ],
-                        ),
-                        TextField(
-                          onSubmitted: setCounter,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              labelText: "Set count (Current: $res)"),
-                        ),
-                        TextField(
-                            onSubmitted: setStep,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: "Set step (Current: $step)",
-                              fillColor: Colors.white,
-                            ))
-                      ],
-                    ))
-              ],
-            )));
+                            ...initializeButtons().map((button) =>
+                                ElevatedButton(
+                                    onPressed: () =>
+                                        button["function"](button["value"]),
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.all(5),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      button["value"].toString(),
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700),
+                                    )))
+                          ]),
+                    ),
+                  ],
+                ))));
   }
 }
