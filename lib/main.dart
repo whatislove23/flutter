@@ -12,153 +12,141 @@ class MainApp extends StatefulWidget {
 }
 
 class MainAppState extends State<MainApp> {
-  final calc = Calculator();
-  String firstVal = "";
-  String secondVal = "";
-  String operation = "";
-
+  List<String> buttons = [
+    "0",
+    "1",
+    "2",
+    "+",
+    "3",
+    "4",
+    "5",
+    "-",
+    "6",
+    "7",
+    "8",
+    "*",
+    "9",
+    "/",
+    "=",
+    "AC"
+  ];
+  final calc =
+      Calculator(firstNumber: "", secondNumber: "", curentOperation: "");
   void wipeFields() {
-    calc.curentOperation = "";
-    calc.firstNumber = "";
-    calc.secondNumber = "";
     setState(() {
-      firstVal = "";
-      operation = "";
-      secondVal = "";
+      calc.curentOperation = "";
+      calc.firstNumber = "";
+      calc.secondNumber = "";
     });
   }
 
   void helper(String value) {
     int? isNumber = int.tryParse(value);
-    if ((firstVal.isNotEmpty && secondVal.isEmpty) &&
+    if ((calc.firstNumber.isNotEmpty && calc.secondNumber.isEmpty) &&
         (value == "-" || value == "+" || value == "*" || value == "/")) {
-      calc.curentOperation = value;
-      setState(() {
-        operation = value;
+      return setState(() {
+        calc.curentOperation = value;
       });
-      return;
     }
-    if (operation.isEmpty && isNumber != null) {
-      calc.firstNumber += value;
-      setState(() {
-        firstVal += value;
+    if (calc.curentOperation.isEmpty && isNumber != null) {
+      return setState(() {
+        calc.firstNumber += value;
       });
-      return;
     }
-    if (operation.isNotEmpty && isNumber != null) {
-      calc.secondNumber += value;
-      setState(() {
-        secondVal += value;
+    if (calc.curentOperation.isNotEmpty && isNumber != null) {
+      return setState(() {
+        calc.secondNumber += value;
       });
-      return;
     }
     if (value == "AC") {
-      wipeFields();
-      return;
+      return wipeFields();
     }
-    if (value == "=" && firstVal.isNotEmpty && secondVal.isNotEmpty) {
-      String temp = calc.calculate();
+    if (value == "=" &&
+        calc.firstNumber.isNotEmpty &&
+        calc.secondNumber.isNotEmpty) {
+      String result = calc.calculate();
       wipeFields();
-      calc.firstNumber = temp;
-      setState(() {
-        firstVal = temp;
+      return setState(() {
+        calc.firstNumber = result;
       });
-      return;
     }
   }
-
-//Why this way? - The instance member 'helper' can't be accessed in an initializer.
-  dynamic initializeButtons() => [
-        {"value": "0", "function": helper},
-        {"value": "1", "function": helper},
-        {"value": "2", "function": helper},
-        {"value": "+", "function": helper},
-        {"value": "3", "function": helper},
-        {"value": "4", "function": helper},
-        {"value": "5", "function": helper},
-        {"value": "-", "function": helper},
-        {"value": "6", "function": helper},
-        {"value": "7", "function": helper},
-        {"value": "8", "function": helper},
-        {"value": "*", "function": helper},
-        {"value": "9", "function": helper},
-        {"value": "/", "function": helper},
-        {"value": "=", "function": helper},
-        {"value": "AC", "function": helper},
-      ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                "Vladyslav's Tymchenko Calculator",
-                style: TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    fontWeight: FontWeight.w500),
-              ),
-              backgroundColor: const Color.fromARGB(255, 255, 166, 0),
-              centerTitle: true,
-            ),
-            body: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Vladyslav's Tymchenko Calculator",
+            style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+                fontWeight: FontWeight.w500),
+          ),
+          backgroundColor: const Color.fromARGB(255, 255, 166, 0),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: const Color.fromARGB(255, 0, 0, 0)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            firstVal,
-                            style: const TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            operation,
-                            style: const TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            secondVal,
-                            style: const TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
+                    Text(
+                      calc.firstNumber,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.w500),
                     ),
-                    const SizedBox(height: 15),
-                    Expanded(
-                      child: GridView.count(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          children: [
-                            ...initializeButtons().map((button) =>
-                                ElevatedButton(
-                                    onPressed: () =>
-                                        button["function"](button["value"]),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.all(5),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      button["value"].toString(),
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700),
-                                    )))
-                          ]),
+                    Text(
+                      calc.curentOperation,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      calc.secondNumber,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.w500),
                     ),
                   ],
-                ))));
+                ),
+              ),
+              const SizedBox(height: 15),
+              Expanded(
+                child: GridView.count(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    children: [
+                      ...buttons.map(
+                        (buttonValue) => ElevatedButton(
+                          onPressed: () => helper(buttonValue),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            buttonValue,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
+                    ]),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
