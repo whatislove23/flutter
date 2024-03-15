@@ -1,149 +1,60 @@
 import 'package:flutter/material.dart';
-import 'calculator.dart';
+import 'package:flutter_3/widgets/actual_block.dart';
+import 'package:flutter_3/widgets/avatar_stats.dart';
+import 'package:flutter_3/widgets/bottom_app_bar.dart';
+import 'package:flutter_3/widgets/dashbord_buttons.dart';
+import 'package:flutter_3/widgets/header.dart';
+import 'package:flutter_3/widgets/photos_grid.dart';
+import 'package:flutter_3/widgets/posts_navbar.dart';
+import 'package:flutter_3/widgets/text_col.dart';
 
 void main() {
-  runApp(const MainApp()); // const MainApp()
+  runApp(const MyApp());
 }
 
-class MainApp extends StatefulWidget {
-  const MainApp({super.key});
-  @override
-  MainAppState createState() => MainAppState();
-}
-
-class MainAppState extends State<MainApp> {
-  List<String> buttons = [
-    "0",
-    "1",
-    "2",
-    "+",
-    "3",
-    "4",
-    "5",
-    "-",
-    "6",
-    "7",
-    "8",
-    "*",
-    "9",
-    "/",
-    "=",
-    "AC"
-  ];
-  final calc =
-      Calculator(firstNumber: "", secondNumber: "", curentOperation: "");
-  void wipeFields() {
-    setState(() {
-      calc.curentOperation = "";
-      calc.firstNumber = "";
-      calc.secondNumber = "";
-    });
-  }
-
-  void helper(String value) {
-    int? isNumber = int.tryParse(value);
-    if ((calc.firstNumber.isNotEmpty && calc.secondNumber.isEmpty) &&
-        (value == "-" || value == "+" || value == "*" || value == "/")) {
-      return setState(() {
-        calc.curentOperation = value;
-      });
-    }
-    if (calc.curentOperation.isEmpty && isNumber != null) {
-      return setState(() {
-        calc.firstNumber += value;
-      });
-    }
-    if (calc.curentOperation.isNotEmpty && isNumber != null) {
-      return setState(() {
-        calc.secondNumber += value;
-      });
-    }
-    if (value == "AC") {
-      return wipeFields();
-    }
-    if (value == "=" &&
-        calc.firstNumber.isNotEmpty &&
-        calc.secondNumber.isNotEmpty) {
-      String result = calc.calculate();
-      wipeFields();
-      return setState(() {
-        calc.firstNumber = result;
-      });
-    }
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Vladyslav's Tymchenko Calculator",
-            style: TextStyle(
-                color: Color.fromARGB(255, 255, 255, 255),
-                fontWeight: FontWeight.w500),
-          ),
-          backgroundColor: const Color.fromARGB(255, 255, 166, 0),
-          centerTitle: true,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      calc.firstNumber,
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      calc.curentOperation,
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      calc.secondNumber,
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15),
-              Expanded(
-                child: GridView.count(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
+      debugShowCheckedModeBanner: false, // ❤️
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: const Scaffold(
+        bottomNavigationBar: MyBottomAppBar(),
+        body: SafeArea(
+          top: true,
+          bottom: true,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ...buttons.map(
-                        (buttonValue) => ElevatedButton(
-                          onPressed: () => helper(buttonValue),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Text(
-                            buttonValue,
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
-                    ]),
-              ),
-            ],
+                      HeaderTile(),
+                      SizedBox(height: 15),
+                      AvatarStats(),
+                      SizedBox(height: 10),
+                      TextCol(),
+                      SizedBox(height: 15),
+                      DashbordButtons(),
+                      SizedBox(height: 15),
+                      Actual(),
+                      SizedBox(height: 15),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 1),
+                PostNavbar(),
+                PhotosGrid()
+              ],
+            ),
           ),
         ),
       ),
