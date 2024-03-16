@@ -50,8 +50,8 @@ class MyApp extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 1),
                 PostNavbar(),
+                SizedBox(height: 1),
                 PhotosGrid()
               ],
             ),

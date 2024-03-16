@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 const black = Color.fromARGB(222, 12, 12, 12);
 
@@ -17,14 +15,16 @@ class TextCol extends StatelessWidget {
           style: TextStyle(
               fontSize: 20, fontWeight: FontWeight.w700, color: black),
         ),
-        Container(
-          margin: const EdgeInsets.only(top: 10),
-          padding:
-              const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(99),
-            color: const Color.fromARGB(18, 0, 0, 0),
+        const SizedBox(height: 10),
+        OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            padding:
+                const EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 0),
+            side:
+                const BorderSide(width: 0.0, color: Color.fromARGB(0, 3, 3, 3)),
+            backgroundColor: const Color.fromARGB(18, 0, 0, 0),
           ),
+          onPressed: () => {},
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -32,7 +32,7 @@ class TextCol extends StatelessWidget {
               Text(
                 "@",
                 style: TextStyle(
-                    fontWeight: FontWeight.w900, fontSize: 20, color: black),
+                    fontWeight: FontWeight.w900, fontSize: 16, color: black),
               ),
               SizedBox(
                 width: 10,

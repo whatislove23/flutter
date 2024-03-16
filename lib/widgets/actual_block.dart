@@ -27,17 +27,25 @@ class Actual extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-                    border: Border.all(
-                      color: Colors.black12,
-                      width: 2.0,
-                    )),
+                  borderRadius: const BorderRadius.all(Radius.circular(50.0)),
+                  border: Border.all(
+                    color: Colors.black12,
+                    width: 2.0,
+                  ),
+                ),
                 child: index == items.length - 1
                     ? Container(
-                        width: 80.0,
-                        height: 80.0,
+                        width: 70.0,
+                        height: 70.0,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 5,
+                              color: Color.fromARGB(53, 0, 0, 0),
+                              offset: Offset(3, 3),
+                            )
+                          ],
                           color: const Color.fromARGB(255, 255, 255, 255),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(50.0)),
@@ -50,10 +58,11 @@ class Actual extends StatelessWidget {
                           Icons.add,
                           size: 40,
                           color: black,
-                        ))
+                        ),
+                      )
                     : Container(
-                        width: 80.0,
-                        height: 80.0,
+                        width: 70.0,
+                        height: 70.0,
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 255, 255, 255),
                           image: DecorationImage(

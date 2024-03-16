@@ -8,42 +8,40 @@ class AvatarStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            ClipOval(
-              child: Image.asset(
-                "assets/avatar.jpeg",
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-              ),
+        Stack(clipBehavior: Clip.none, children: [
+          ClipOval(
+            child: Image.asset(
+              "assets/avatar.jpeg",
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
             ),
-            Positioned(
-              width: 35,
-              height: 35,
-              bottom: -5,
-              right: -5,
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 4),
-                  borderRadius: BorderRadius.circular(99),
-                  color: Colors.blueAccent,
-                ),
-                child: const Text(
-                  "+",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white),
-                ),
-              ),
-            )
-          ],
-        ),
+          ),
+          Positioned(
+            bottom: -5,
+            right: -5,
+            child: Material(
+                type: MaterialType.transparency,
+                child: Ink(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 4.0),
+                    color: Colors.blueAccent,
+                    shape: BoxShape.circle,
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(1000.0),
+                    onTap: () => {},
+                    child: const Icon(
+                      Icons.add,
+                      size: 25.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                )),
+          )
+        ]),
         const Expanded(
           flex: 1,
           child: SizedBox(),
@@ -54,7 +52,6 @@ class AvatarStats extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "162",
@@ -63,11 +60,13 @@ class AvatarStats extends StatelessWidget {
                           fontSize: 20,
                           color: black),
                     ),
-                    Text("posts",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: black,
-                        ))
+                    Text(
+                      "posts",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: black,
+                      ),
+                    )
                   ],
                 ),
                 Column(
