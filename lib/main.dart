@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_3/widgets/actual_block.dart';
-import 'package:flutter_3/widgets/avatar_stats.dart';
-import 'package:flutter_3/widgets/bottom_app_bar.dart';
-import 'package:flutter_3/widgets/dashbord_buttons.dart';
-import 'package:flutter_3/widgets/header.dart';
-import 'package:flutter_3/widgets/photos_grid.dart';
-import 'package:flutter_3/widgets/posts_navbar.dart';
-import 'package:flutter_3/widgets/text_col.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyAppState extends StatefulWidget {
+  @override
+  MyApp createState() => MyApp();
+}
 
+class MyApp extends State<MyAppState> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,40 +19,19 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const Scaffold(
-        bottomNavigationBar: MyBottomAppBar(),
-        body: SafeArea(
-          top: true,
-          bottom: true,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      HeaderTile(),
-                      SizedBox(height: 15),
-                      AvatarStats(),
-                      SizedBox(height: 10),
-                      TextCol(),
-                      SizedBox(height: 15),
-                      DashbordButtons(),
-                      SizedBox(height: 15),
-                      Actual(),
-                      SizedBox(height: 15),
-                    ],
-                  ),
-                ),
-                PostNavbar(),
-                SizedBox(height: 1),
-                PhotosGrid()
-              ],
-            ),
-          ),
+      home: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
+            BottomNavigationBarItem(label: "Photos", icon: Icon(Icons.photo))
+          ],
         ),
+        body: SafeArea(
+            top: true,
+            bottom: true,
+            child: ListView(
+              children: [],
+            )),
       ),
     );
   }
