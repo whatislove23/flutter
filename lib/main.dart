@@ -1,37 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_3/widgets/bottom_nav_bar.dart';
+import 'package:flutter_3/widgets/drawer.dart';
+import 'package:flutter_3/widgets/page_one.dart';
+import 'package:flutter_3/widgets/page_two.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MainApp()); // const MainApp()
 }
 
-class MyAppState extends StatefulWidget {
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
   @override
-  MyApp createState() => MyApp();
+  MainAppState createState() => MainAppState();
 }
 
-class MyApp extends State<MyAppState> {
+class MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
+  late TabController controller;
+  int pageIdx = 0;
+  List<Widget> pages = [
+    const PageOne(),
+    const PageTwo(),
+  ];
+  @override
+  void initState() {
+    super.initState();
+    controller = TabController(vsync: this, length: pages.length)
+      ..addListener(() {
+        setState(() {
+          pageIdx = controller.index;
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // ❤️
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
-            BottomNavigationBarItem(label: "Photos", icon: Icon(Icons.photo))
-          ],
+        appBar: AppBar(),
+        drawer: StyledDrawer(
+            controller: controller, setState: setState, pageIdx: pageIdx),
+        bottomNavigationBar: BottomNavBar(
+          controller: controller,
+          pageIdx: pageIdx,
+          setState: setState,
         ),
         body: SafeArea(
-            top: true,
-            bottom: true,
-            child: ListView(
-              children: [],
-            )),
+          top: true,
+          bottom: true,
+          child: TabBarView(
+            controller: controller,
+            children: pages,
+          ),
+        ),
       ),
     );
   }
