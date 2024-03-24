@@ -49,9 +49,10 @@ class PageTwoState extends State<PageTwo> {
           : Column(
               children: [
                 SizedBox(
-                    width: 400,
-                    child: Image.network(
-                        "https://pngimg.com/d/rick_morty_PNG1.png")),
+                  width: 400,
+                  child:
+                      Image.network("https://pngimg.com/d/rick_morty_PNG1.png"),
+                ),
                 Center(
                   child: Text(
                     "Click  on the button below to load cards...".toUpperCase(),

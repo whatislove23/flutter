@@ -11,8 +11,6 @@ class PageOneState extends State<PageOne> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: const StyledDrawer(),
-
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
