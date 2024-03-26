@@ -70,13 +70,17 @@ class StyledCartProduct extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      onPressed: () => increment(product),
-                      icon: const Icon(Icons.add_circle_outline),
+                      onPressed: () => decrement(product),
+                      icon: const Icon(Icons.remove_circle_outline),
                     ),
                     Text(
                       product.amount.toString(),
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                    IconButton(
+                      onPressed: () => increment(product),
+                      icon: const Icon(Icons.add_circle_outline),
                     ),
                   ],
                 ),
