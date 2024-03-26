@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 class Product {
@@ -24,15 +23,15 @@ Future<List<Product>> fetchProducts() async {
   if (response.statusCode == 200) {
     // Parse JSON response and return list of products
     List<dynamic> productsJson = jsonDecode(response.body)["products"];
-    return productsJson.map((json) {
-      return Product(
-        id: json["id"],
-        title: json["title"],
-        description: json["description"],
-        price: json["price"],
-        images: List<String>.from(json["images"]),
-      );
-    }).toList();
+    return productsJson
+        .map((json) => Product(
+              id: json["id"],
+              title: json["title"],
+              description: json["description"],
+              price: json["price"],
+              images: List<String>.from(json["images"]),
+            ))
+        .toList();
   } else {
     // Throw an exception if failed to load
     throw Exception('Failed to load products');
