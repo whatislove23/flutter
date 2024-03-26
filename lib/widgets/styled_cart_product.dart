@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_3/models/product.dart';
 
 class StyledCartProduct extends StatelessWidget {
@@ -80,10 +78,6 @@ class StyledCartProduct extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w500),
                     ),
-                    IconButton(
-                      onPressed: () => decrement(product),
-                      icon: const Icon(Icons.remove_circle_outline_outlined),
-                    )
                   ],
                 ),
               ],
