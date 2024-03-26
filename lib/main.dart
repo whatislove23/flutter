@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_3/widgets/bottom_nav_bar.dart';
-import 'package:flutter_3/widgets/drawer.dart';
-import 'package:flutter_3/widgets/page_one.dart';
-import 'package:flutter_3/widgets/page_two.dart';
+import 'package:flutter_3/models/product.dart';
+import 'package:flutter_3/widgets/future_products_builder.dart';
+import 'package:flutter_3/widgets/styled_app_bar.dart';
+import 'package:flutter_3/widgets/styled_drawer.dart';
 
 void main() {
-  runApp(const MainApp()); // const MainApp()
+  runApp(const MainApp());
 }
 
 class MainApp extends StatefulWidget {
@@ -14,28 +14,45 @@ class MainApp extends StatefulWidget {
   MainAppState createState() => MainAppState();
 }
 
-class MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
-  late TabController controller;
-  int pageIdx = 0;
-  List<Widget> pages = [
-    const PageOne(),
-    const PageTwo(),
-  ];
-  @override
-  void initState() {
-    super.initState();
-    controller = TabController(vsync: this, length: pages.length)
-      ..addListener(() {
-        setState(() {
-          pageIdx = controller.index;
-        });
-      });
+class MainAppState extends State<MainApp> {
+  List<Product> cart = [];
+  late Future<List<Product>> products;
+  double totalPrice = 0;
+
+  calculateTotalPrice() {
+    setState(() {
+      totalPrice = cart.fold(
+          0, (value, element) => value + (element.amount * element.price));
+    });
+  }
+
+  addToCart(Product product) {
+    setState(() {
+      if (cart.contains(product)) {
+        product.amount += 1;
+      } else {
+        cart.add(product);
+      }
+    });
+    calculateTotalPrice();
+  }
+
+  removeFromCart(Product product, {bool delete = false}) {
+    setState(() {
+      if (product.amount == 1 || delete) {
+        product.amount = 1;
+        cart.remove(product);
+      } else {
+        product.amount -= 1;
+      }
+    });
+    calculateTotalPrice();
   }
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    products = fetchProducts();
   }
 
   @override
@@ -47,21 +64,17 @@ class MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        appBar: AppBar(),
         drawer: StyledDrawer(
-            controller: controller, setState: setState, pageIdx: pageIdx),
-        bottomNavigationBar: BottomNavBar(
-          controller: controller,
-          pageIdx: pageIdx,
-          setState: setState,
-        ),
+            cartProducts: cart,
+            cartItemIncrement: addToCart,
+            cartItemDecrement: removeFromCart,
+            totalPrice: totalPrice),
+        appBar: StyledAppBar(cartCount: cart.length),
         body: SafeArea(
           top: true,
           bottom: true,
-          child: TabBarView(
-            controller: controller,
-            children: pages,
-          ),
+          child: FutureProductsBuilder(
+              products: products, addToCartAction: addToCart),
         ),
       ),
     );
